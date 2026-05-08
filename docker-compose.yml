@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  mongo_db:
+    image: mongo:latest
+    container_name: library_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo_admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: books
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app:
+    build: .
+    container_name: library_app
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URL: mongodb://mongo_admin:password@mongo_db:27017/books?authSource=admin
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_data:
