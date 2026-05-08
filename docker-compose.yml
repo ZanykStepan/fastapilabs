@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: library_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: lib_db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user_name -d db_name" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis_cache:
+      image: redis:latest
+      container_name: book-cache
+      ports:
+        - "6379:6379"
+
+  app:
+    build: .
+    container_name: library_app
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://user:pass@db:5432/lib_db
+      REDIS_URL: redis://redis_cache:6379/0
+    depends_on:
+        db:
+          condition: service_healthy
+        redis_cache:
+          condition: service_started
+
+  prism_mock:
+    image: stoplight/prism:5
+    container_name: library_mock_server
+    ports:
+      - "4010:4010"
+    volumes:
+      - ./openapi.yaml:/tmp/openapi.yaml
+    command: mock -h 0.0.0.0 /tmp/openapi.yaml --no-multiprocess
