@@ -9,6 +9,6 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     yield
 
-app = FastAPI(title="Бібліотека API", description="Лабораторна робота #7", lifespan=lifespan)
+app = FastAPI(title="Бібліотека API", description="Лабораторна робота #8", lifespan=lifespan)
 
 app.include_router(books_router)
