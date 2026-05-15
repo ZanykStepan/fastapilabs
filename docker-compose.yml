@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    container_name: library_db
+    container_name: library6_db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -13,7 +13,7 @@ services:
 
   app:
     build: .
-    container_name: library_app
+    container_name: library6_app
     ports:
       - "8000:8000"
     environment:
