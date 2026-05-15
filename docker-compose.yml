@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mongo_db:
     image: mongo:latest
-    container_name: library_mongo
+    container_name: library4_mongo
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo_admin
@@ -15,7 +15,7 @@ services:
 
   app:
     build: .
-    container_name: library_app
+    container_name: library4_app
     ports:
       - "8000:8000"
     environment:
