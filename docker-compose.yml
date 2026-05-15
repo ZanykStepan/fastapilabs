@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    container_name: library_db
+    container_name: library7_db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -18,13 +18,13 @@ services:
 
   redis_cache:
       image: redis:latest
-      container_name: book-cache
+      container_name: book7-cache
       ports:
         - "6379:6379"
 
   app:
     build: .
-    container_name: library_app
+    container_name: library7_app
     ports:
       - "8000:8000"
     environment:

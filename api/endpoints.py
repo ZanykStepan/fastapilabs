@@ -21,8 +21,7 @@ from security import (
 
 router = APIRouter(tags=["Books"])
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 @router.post("/login")
 async def login(
@@ -66,7 +65,7 @@ async def get_books(
         cursor: Optional[UUID] = Query(None, description="ID останньої книги з попередньої сторінки"),
         status_filter: Optional[BookStatus] = None,
         author: Optional[str] = None,
-        token: Optional[str] = Depends(oauth2_scheme),
+        token: str = Depends(oauth2_scheme),
         db: AsyncSession = Depends(get_db)
 ):
     user_id = "admin" if token else None
@@ -99,8 +98,7 @@ async def get_book(
         token: str = Depends(oauth2_scheme),
         db: AsyncSession = Depends(get_db)
 ):
-    if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
 
     await rate_limit(request, user_id="admin")
 
@@ -127,8 +125,7 @@ async def create_book(
         token: str = Depends(oauth2_scheme),
         db: AsyncSession = Depends(get_db)
 ):
-    if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
 
     await rate_limit(request, user_id="admin")
 
@@ -146,8 +143,7 @@ async def delete_book(
         token: str = Depends(oauth2_scheme),
         db: AsyncSession = Depends(get_db)
 ):
-    if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
 
     await rate_limit(request, user_id="admin")
 
